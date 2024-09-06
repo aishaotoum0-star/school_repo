@@ -1,0 +1,60 @@
+﻿@model SchoolSystems.Models.Books
+
+@{
+    ViewData["Title"] = "Details";
+}
+<div class="card shadow">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Details Books</h6>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.BooksId)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.BooksId)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.BookName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.BookName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.BooksPrice)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.BooksPrice)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.AuthorName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.AuthorName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.BookBrnPrice)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.BookBrnPrice)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.BookImgeUrl)
+            </dt>
+            <dd class="col-sm-10">
+                <img src="~/Images/Books/@Model.BookImgeUrl" style="max-width:35px" />
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.AuthorImgeUrl)
+            </dt>
+            <dd class="col-sm-10">
+                <img src="~/Images/Author/@Model.AuthorImgeUrl" style="max-width:35px" />
+            </dd>
+        </dl>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.BooksId" class="btn btn-primary">Edit</a>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</div>

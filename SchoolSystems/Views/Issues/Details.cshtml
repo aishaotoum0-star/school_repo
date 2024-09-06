@@ -1,0 +1,42 @@
+﻿@model SchoolSystems.Models.Issues
+
+@{
+    ViewData["Title"] = "Details";
+}
+<div class="card shadow">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Details Issues</h6>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.IssuesId)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.IssuesId)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.StudentId)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Student.StudentName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.BooksId)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Books.BookName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.IssuesDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.IssuesDate)
+            </dd>
+        </dl>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.IssuesId" class="btn btn-primary">Edit</a>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</div>

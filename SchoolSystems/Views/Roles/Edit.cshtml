@@ -1,0 +1,36 @@
+﻿@model SchoolSystems.Models.Roles
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<div class="card shadow">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Edit Roles</h6>
+    </div>
+    <div class="card-body">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div class="form-group">
+                <label asp-for="RolesId" class="control-label"></label>
+                <input asp-for="RolesId" class="form-control" />
+                <span asp-validation-for="RolesId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RolesName" class="control-label"></label>
+                <input asp-for="RolesName" class="form-control" />
+                <span asp-validation-for="RolesName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RolesIvI" class="control-label"></label>
+                <input asp-for="RolesIvI" class="form-control" />
+                <span asp-validation-for="RolesIvI" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+        <div>
+        </div>
+    </div>
+</div>
+

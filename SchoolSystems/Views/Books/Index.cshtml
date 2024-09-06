@@ -1,0 +1,86 @@
+﻿@model IEnumerable<SchoolSystems.Models.Books>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Books Index</h1>
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Books</h6>
+            <div class="text-right">
+                <a asp-action="Create" class="btn btn-primary">Create New</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BooksId)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BookName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BooksPrice)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.AuthorName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BookBrnPrice)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.BookImgeUrl)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.AuthorImgeUrl)
+                            </th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.BooksId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.BookName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.BooksPrice)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.AuthorName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.BookBrnPrice)
+                                </td>
+                                <td>
+                                    <img src="~/Images/Books/@item.BookImgeUrl" style="max-width:35px" />
+                                </td>
+                                <td>
+                                    <img src="~/Images/Author/@item.AuthorImgeUrl"  style="max-width:35px" />
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.BooksId " class="text-primary"><i class="fa fa-edit"></i></a>|
+                                    <a asp-action="Details" asp-route-id="@item.BooksId " class="text-info "><i class="fa fa-info-circle"></i></a>|
+                                    <a asp-action="Delete" asp-route-id="@item.BooksId " class="text-danger"><i class="fa fa-times"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
