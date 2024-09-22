@@ -41,6 +41,8 @@ namespace SchoolSystems.Controllers
         // GET: LoginController/Create
         public ActionResult Create()
         {
+            ViewBag.Roles = roles.View();
+            ViewBag.User = user.View();
             return View();
         }
 
@@ -64,6 +66,8 @@ namespace SchoolSystems.Controllers
         public ActionResult Edit(int id)
         {
             var loginData = login.Find(id);
+            ViewBag.Roles = roles.View();
+            ViewBag.User = user.View();
             loginData.Roles = roles.Find(loginData.RoleId);
             loginData.User = user.Find(loginData.UserId);
             return View(loginData);

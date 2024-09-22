@@ -41,6 +41,8 @@ namespace SchoolSystems.Controllers
         // GET: IssuesController/Create
         public ActionResult Create()
         {
+            ViewBag.Student = student.View();
+            ViewBag.Books = books.View();
             return View();
         }
 
@@ -64,6 +66,8 @@ namespace SchoolSystems.Controllers
         public ActionResult Edit(int id)
         {
             var dataIssues = issues.Find(id);
+            ViewBag.Student = student.View();
+            ViewBag.Books = books.View();
             dataIssues.Student = student.Find(dataIssues.StudentId);
             dataIssues.Books = books.Find(dataIssues.BooksId);
             return View(dataIssues);

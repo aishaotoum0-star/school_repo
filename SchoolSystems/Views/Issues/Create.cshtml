@@ -9,19 +9,21 @@
     </div>
     <div class="card-body">
         <form asp-action="Create" enctype="multipart/form-data">
-            <div class="form-group">
-                <label asp-for="IssuesId" class="control-label"></label>
-                <input asp-for="IssuesId" class="form-control" />
-                <span asp-validation-for="IssuesId" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="StudentId" class="control-label"></label>
-                <input asp-for="StudentId" class="form-control" />
+                @* <input asp-for="StudentId" class="form-control" /> *@
+                <select asp-for="StudentId" class="form-control" asp-items="@(new SelectList(ViewBag.Student, "StudentId", "StudentName"))">
+                    <option value="">Select a role</option> <!-- Default option for better UX -->
+                </select>
                 <span asp-validation-for="StudentId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="BooksId" class="control-label"></label>
-                <input asp-for="BooksId" class="form-control" />
+                @* <input asp-for="BooksId" class="form-control" /> *@
+                <select asp-for="BooksId" class="form-control" asp-items="@(new SelectList(ViewBag.Books, "BooksId", "BookName"))">
+                    <option value="">Select a role</option> <!-- Default option for better UX -->
+                </select>
                 <span asp-validation-for="BooksId" class="text-danger"></span>
             </div>
             <div class="form-group">
