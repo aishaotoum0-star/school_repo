@@ -1,0 +1,91 @@
+﻿@model SchoolSystems.ViewModels.RolesVM
+@* IEnumerable<SchoolSystems.Models.Roles> *@
+
+@{
+    ViewData["Title"] = "FullAction";
+}
+
+
+
+<div class="container-fluid">
+
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">FullAction</h6>
+        </div>
+        <div class="card-body">
+            <form asp-action="FullAction" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label asp-for="Roles.RolesId" class="control-label"></label>
+                    <input asp-for="Roles.RolesId" readonly class="form-control" />
+                    <span asp-validation-for="Roles.RolesId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Roles.RolesName" class="control-label"></label>
+                    <input asp-for="Roles.RolesName" class="form-control" />
+                    <span asp-validation-for="Roles.RolesName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Roles.RolesIvI" class="control-label"></label>
+                    <input asp-for="Roles.RolesIvI" class="form-control" />
+                    <span asp-validation-for="Roles.RolesIvI" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <a asp-action="FullAction" class="btn btn-secondary">New</a>
+                </div>
+            </form>
+            <div>
+            </div>
+        </div>
+    </div>
+   <br />
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Roles</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Roles.RolesId)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Roles.RolesName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Roles.RolesIvI)
+                            </th>
+                            <th>Avtion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ListRoles)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RolesId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RolesName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RolesIvI)
+                                </td>
+                                <td>
+                                    <a asp-action="FullAction" asp-route-editId="@item.RolesId " class="text-primary"><i class="fa fa-edit"></i></a>|
+                                    <a asp-action="FullAction" asp-route-deleteId="@item.RolesId" class="text-danger" onclick="confirm(' Press a button!\nEither OK or Cancel.');"><i class="fa fa-times"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br />
+
+</div>
+

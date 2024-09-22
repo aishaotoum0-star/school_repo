@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Differencing;
 using SchoolSystems.Models;
 using SchoolSystems.Models.Repositories;
+using SchoolSystems.ViewModels;
 
 namespace SchoolSystems.Controllers
 {
@@ -23,10 +25,53 @@ namespace SchoolSystems.Controllers
         // GET: RolesController/Details/5
         public ActionResult Details(int id)
         {
+
             var rolData = roles.Find(id);
             return View(rolData);
         }
-
+        // GET: RolesController/FullAction
+        public ActionResult FullAction(int editId,int deleteId)
+        {
+            if (deleteId>0)
+            {
+                roles.Delete(deleteId, new Roles());
+            }
+            var rolData = roles.View();
+            var newData = new RolesVM
+            {
+                Roles = (editId != 0 ? roles.Find(editId) : new Roles()),
+                ListRoles = rolData,
+            };
+            return View(newData);
+        }     
+        // POST: RolesController/FullAction
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult FullAction(RolesVM collection)
+        {
+            try
+            {
+                var data = new Roles 
+                {
+                    RolesId=collection.Roles.RolesId,
+                    RolesIvI=collection.Roles.RolesIvI,
+                    RolesName=collection.Roles.RolesName,
+                };
+                if (collection.Roles.RolesId == 0)
+                {
+                    roles.Add(data);
+                }
+                else 
+                {
+                    roles.Update(data.RolesId,data);
+                }
+                return RedirectToAction(nameof(FullAction));
+            }
+            catch
+            {
+                return View();
+            }
+        }
         // GET: RolesController/Create
         public ActionResult Create()
         {

@@ -22,6 +22,7 @@ namespace SchoolSystems.Models.Repositories
             bool result = false;
             if (entity != null)
             {
+                entity.RolesId = lstRoles.Max(r => r.RolesId)+1;
                 lstRoles.Add(entity);
                 result = true;
             }
