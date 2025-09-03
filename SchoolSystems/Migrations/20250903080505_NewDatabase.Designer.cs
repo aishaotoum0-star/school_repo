@@ -10,7 +10,7 @@ using SchoolSystems.Models.Data;
 namespace SchoolSystems.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240922102200_NewDatabase")]
+    [Migration("20250903080505_NewDatabase")]
     partial class NewDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
