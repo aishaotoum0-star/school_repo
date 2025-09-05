@@ -60,7 +60,7 @@ jobs:
 
   
       - name: Build Docker image
-        run: docker buildx build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} ./publish
+        run: docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
 
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
@@ -80,4 +80,5 @@ jobs:
             docker stop schoolsystems || true
             docker rm schoolsystems || true
             docker run -d -p 8080:80 --name schoolsystems ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
 
