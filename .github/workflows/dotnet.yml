@@ -9,7 +9,7 @@ env:
 
 jobs:
   package:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -35,7 +35,7 @@ jobs:
           path: ./publish/*
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: package
     steps:
       - name: Checkout code
@@ -60,7 +60,7 @@ jobs:
         run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: build
     steps:
       - name: Deploy via SSH
