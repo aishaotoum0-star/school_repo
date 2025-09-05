@@ -1,3 +1,27 @@
+  GNU nano 8.5                         .github/workflows/dotnet.yml                          Modified
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 name: CI/CD .NET 5 App
 
 on:
@@ -11,56 +35,54 @@ jobs:
   package:
     runs-on: ubuntu-latest
     steps:
-      # 1️⃣ Checkout code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Restore dependencies
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '5.0.x'
+
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore ./SchoolSystems/SchoolSystems.csproj
 
-      # 3️⃣ Build project in Release
       - name: Build project
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build ./SchoolSystems/SchoolSystems.csproj --configuration Release --no-restore
 
-      # 4️⃣ Publish artifacts
+      - name: Apply EF Core Migrations
+        run: dotnet ef database update --project ./SchoolSystems/SchoolSystems.csproj --connection "${{ secrets.DB_CONNECTION }}"
+
       - name: Publish project
-        run: dotnet publish --configuration Release --output ./publish
-        working-directory: ${{ github.workspace }}/SchoolSystems
+        run: dotnet publish ./SchoolSystems/SchoolSystems.csproj -c Release -o ./publish
 
-      # 5️⃣ Upload artifacts
       - name: Upload published artifacts
         uses: actions/upload-artifact@v3
         with:
           name: dotnet-publish
-          path: SchoolSystems/publish/*
+          path: ./publish/*
 
   build:
     runs-on: ubuntu-latest
     needs: package
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Download published artifacts
       - name: Download published artifacts
         uses: actions/download-artifact@v3
         with:
           name: dotnet-publish
-          path: SchoolSystems/publish
+          path: ./publish
 
-      # Docker login
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Build Docker image
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} ./SchoolSystems
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} ./publish
 
-      # Push Docker image
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
@@ -79,6 +101,8 @@ jobs:
             docker stop schoolsystems || true
             docker rm schoolsystems || true
             docker run -d -p 80:80 --name schoolsystems ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+
 
 
 
