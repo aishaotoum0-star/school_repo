@@ -1,4 +1,4 @@
-name: CI/CD .NET 5 App
+name: CI/CD .NET 5 App (Debug Package)
 
 on:
   push:
@@ -22,14 +22,15 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore ./SchoolSystems/SchoolSystems.csproj
 
-      - name: Build project
-        run: dotnet build ./SchoolSystems/SchoolSystems.csproj --configuration Release --no-restore
+      - name: Build project with detailed logs
+        run: dotnet build ./SchoolSystems/SchoolSystems.csproj --configuration Release --no-restore -v diag
 
-      - name: Apply EF Core Migrations
-        run: dotnet ef database update --project ./SchoolSystems/SchoolSystems.csproj --connection "${{ secrets.DB_CONNECTION }}"
+      # مؤقتاً يمكنك تعليق هذه الخطوة لتحديد إذا كانت سبب المشكلة
+      # - name: Apply EF Core Migrations
+      #   run: dotnet ef database update --project ./SchoolSystems/SchoolSystems.csproj --connection "${{ secrets.DB_CONNECTION }}"
 
-      - name: Publish project
-        run: dotnet publish ./SchoolSystems/SchoolSystems.csproj -c Release -o ./publish
+      - name: Publish project with detailed logs
+        run: dotnet publish ./SchoolSystems/SchoolSystems.csproj -c Release -o ./publish -v diag
 
       - name: Upload published artifacts
         uses: actions/upload-artifact@v4
