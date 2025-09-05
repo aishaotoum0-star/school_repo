@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Differencing;
+﻿using Microsoft.AspNetCore.Mvc;
 using SchoolSystems.Models;
 using SchoolSystems.Models.Repositories;
 using SchoolSystems.ViewModels;
@@ -9,71 +7,91 @@ namespace SchoolSystems.Controllers
 {
     public class RolesController : Controller
     {
-        private readonly IRepository<Roles> roles;
+        private readonly IRepository<Roles> _roles;
 
-        public RolesController(IRepository<Roles> _Roles)
+        public RolesController(IRepository<Roles> roles)
         {
-            roles = _Roles;
+            _roles = roles;
         }
+
         // GET: RolesController
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            var rolData = roles.View();
+            var rolData = _roles.View();
             return View(rolData);
         }
 
         // GET: RolesController/Details/5
-        public ActionResult Details(int id)
+        public IActionResult Details(int id)
         {
-
-            var rolData = roles.Find(id);
+            var rolData = _roles.Find(id);
+            if (rolData == null)
+                return NotFound();
             return View(rolData);
         }
+
         // GET: RolesController/FullAction
-        public ActionResult FullAction(int editId,int deleteId)
+        public IActionResult FullAction(int editId = 0, int deleteId = 0)
         {
-            if (deleteId>0)
+            if (deleteId > 0)
             {
-                roles.Delete(deleteId, new Roles());
+                try
+                {
+                    _roles.Delete(deleteId, null);
+                }
+                catch
+                {
+                    // Optionally, add error handling here
+                }
             }
-            var rolData = roles.View();
+            var rolData = _roles.View();
             var newData = new RolesVM
             {
-                Roles = (editId != 0 ? roles.Find(editId) : new Roles()),
-                ListRoles = rolData,
+                Roles = (editId != 0 ? _roles.Find(editId) : new Roles()),
+                ListRoles = rolData
             };
             return View(newData);
-        }     
+        }
+
         // POST: RolesController/FullAction
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult FullAction(RolesVM collection)
+        public IActionResult FullAction(RolesVM collection)
         {
+            if (!ModelState.IsValid)
+            {
+                collection.ListRoles = _roles.View();
+                return View(collection);
+            }
+
             try
             {
-                var data = new Roles 
+                var data = new Roles
                 {
-                    RolesId=collection.Roles.RolesId,
-                    RolesIvI=collection.Roles.RolesIvI,
-                    RolesName=collection.Roles.RolesName,
+                    RolesId = collection.Roles.RolesId,
+                    RolesIvI = collection.Roles.RolesIvI,
+                    RolesName = collection.Roles.RolesName,
                 };
                 if (collection.Roles.RolesId == 0)
                 {
-                    roles.Add(data);
+                    _roles.Add(data);
                 }
-                else 
+                else
                 {
-                    roles.Update(data.RolesId,data);
+                    _roles.Update(data.RolesId, data);
                 }
                 return RedirectToAction(nameof(FullAction));
             }
             catch
             {
-                return View();
+                ModelState.AddModelError("", "An error occurred while saving the role.");
+                collection.ListRoles = _roles.View();
+                return View(collection);
             }
         }
+
         // GET: RolesController/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
             return View();
         }
@@ -81,62 +99,79 @@ namespace SchoolSystems.Controllers
         // POST: RolesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Roles collection)
+        public IActionResult Create(Roles collection)
         {
+            if (!ModelState.IsValid)
+                return View(collection);
+
             try
             {
-                roles.Add(collection);
+                _roles.Add(collection);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                ModelState.AddModelError("", "An error occurred while creating the role.");
+                return View(collection);
             }
         }
 
         // GET: RolesController/Edit/5
-        public ActionResult Edit(int id)
+        public IActionResult Edit(int id)
         {
-            var rolData = roles.Find(id);
+            var rolData = _roles.Find(id);
+            if (rolData == null)
+                return NotFound();
             return View(rolData);
         }
 
         // POST: RolesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Roles collection)
+        public IActionResult Edit(int id, Roles collection)
         {
+            if (!ModelState.IsValid)
+                return View(collection);
+
             try
             {
-                roles.Update(id,collection);
+                _roles.Update(id, collection);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                ModelState.AddModelError("", "An error occurred while editing the role.");
+                return View(collection);
             }
         }
 
         // GET: RolesController/Delete/5
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
-            var rolData = roles.Find(id);
+            var rolData = _roles.Find(id);
+            if (rolData == null)
+                return NotFound();
             return View(rolData);
         }
 
         // POST: RolesController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Roles collection)
+        public IActionResult DeleteConfirmed(int id)
         {
+            var rolData = _roles.Find(id);
+            if (rolData == null)
+                return NotFound();
+
             try
             {
-                roles.Delete(id, collection);
+                _roles.Delete(id, null);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                ModelState.AddModelError("", "An error occurred while deleting the role.");
+                return View("Delete", rolData);
             }
         }
     }

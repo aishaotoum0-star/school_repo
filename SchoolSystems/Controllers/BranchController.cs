@@ -1,34 +1,37 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SchoolSystems.Models;
 using SchoolSystems.Models.Repositories;
+using System;
 
 namespace SchoolSystems.Controllers
 {
     public class BranchController : Controller
     {
-        private readonly IRepository<Branch> Branch;
+        private readonly IRepository<Branch> _branchRepository;
 
-        public BranchController(IRepository<Branch> _Branch)
+        public BranchController(IRepository<Branch> branchRepository)
         {
-            Branch = _Branch;
+            _branchRepository = branchRepository;
         }
+
         // GET: BranchController
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            var branchData = Branch.View();
+            var branchData = _branchRepository.View();
             return View(branchData);
         }
 
         // GET: BranchController/Details/5
-        public ActionResult Details(int id)
+        public IActionResult Details(int id)
         {
-            var branchData = Branch.Find(id);
+            var branchData = _branchRepository.Find(id);
+            if (branchData == null)
+                return NotFound();
             return View(branchData);
         }
 
         // GET: BranchController/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
             return View();
         }
@@ -36,62 +39,75 @@ namespace SchoolSystems.Controllers
         // POST: BranchController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Branch collection)
+        public IActionResult Create(Branch branch)
         {
+            if (!ModelState.IsValid)
+                return View(branch);
+
             try
             {
-                Branch.Add(collection);
+                _branchRepository.Add(branch);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception)
             {
-                return View();
+                ModelState.AddModelError("", "An error occurred while creating the branch.");
+                return View(branch);
             }
         }
 
         // GET: BranchController/Edit/5
-        public ActionResult Edit(int id)
+        public IActionResult Edit(int id)
         {
-            var branchData = Branch.Find(id);
+            var branchData = _branchRepository.Find(id);
+            if (branchData == null)
+                return NotFound();
             return View(branchData);
         }
 
         // POST: BranchController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Branch collection)
+        public IActionResult Edit(int id, Branch branch)
         {
+            if (!ModelState.IsValid)
+                return View(branch);
+
             try
             {
-                Branch.Update(id, collection);
+                _branchRepository.Update(id, branch);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception)
             {
-                return View();
+                ModelState.AddModelError("", "An error occurred while editing the branch.");
+                return View(branch);
             }
         }
 
         // GET: BranchController/Delete/5
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
-            var branchData = Branch.Find(id);
+            var branchData = _branchRepository.Find(id);
+            if (branchData == null)
+                return NotFound();
             return View(branchData);
         }
 
         // POST: BranchController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Branch collection)
+        public IActionResult DeleteConfirmed(int id)
         {
             try
             {
-                Branch.Delete(id, collection);
+                _branchRepository.Delete(id, null);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception)
             {
-                return View();
+                ModelState.AddModelError("", "An error occurred while deleting the branch.");
+                return RedirectToAction(nameof(Delete), new { id });
             }
         }
     }

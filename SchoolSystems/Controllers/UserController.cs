@@ -12,9 +12,9 @@ namespace SchoolSystems.Controllers
     public class UserController : Controller
     {
         private readonly IRepository<User> user;
-        private readonly IHostingEnvironment webHosting;
+        private readonly IWebHostEnvironment webHosting;
 
-        public UserController(IRepository<User> _User,IHostingEnvironment _WebHosting)
+        public UserController(IRepository<User> _User,IWebHostEnvironment _WebHosting)
         {
             user = _User;
             webHosting = _WebHosting;
@@ -141,7 +141,7 @@ namespace SchoolSystems.Controllers
                 }
                 return ImagesURL;
             }
-            catch (Exception ex)
+            catch (Exception )
             {
 
             }

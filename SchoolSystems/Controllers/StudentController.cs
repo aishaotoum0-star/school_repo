@@ -12,9 +12,9 @@ namespace SchoolSystems.Controllers
     public class StudentController : Controller
     {
         private readonly IRepository<Student> student;
-        private readonly IHostingEnvironment webHosting;
+        private readonly IWebHostEnvironment webHosting;
 
-        public StudentController(IRepository<Student> _Student,IHostingEnvironment _WebHosting)
+        public StudentController(IRepository<Student> _Student,IWebHostEnvironment _WebHosting)
         {
             student = _Student;
             webHosting = _WebHosting;
@@ -146,7 +146,7 @@ namespace SchoolSystems.Controllers
                 }
                 return ImagesURL;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }

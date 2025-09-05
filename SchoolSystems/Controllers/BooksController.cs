@@ -13,9 +13,9 @@ namespace SchoolSystems.Controllers
     public class BooksController : Controller
     {
         private readonly IRepository<Books> Book;
-        private readonly IHostingEnvironment hosting;
+        private readonly IWebHostEnvironment hosting;
 
-        public BooksController(IRepository<Books> _Books, IHostingEnvironment _Hosting)
+        public BooksController(IRepository<Books> _Books, IWebHostEnvironment _Hosting)
         {
             Book = _Books;
             hosting = _Hosting;
@@ -153,7 +153,7 @@ namespace SchoolSystems.Controllers
                 }
                 return ImagesURL;
             }
-            catch (Exception ex)
+            catch (Exception)
             { 
 
             }
