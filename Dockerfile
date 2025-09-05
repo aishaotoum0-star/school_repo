@@ -1,5 +1,5 @@
 # 🔹 Stage 1: Build the project
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
 ENV DOTNET_USE_POLLING_FILE_WATCHER=1
 
@@ -19,7 +19,7 @@ RUN dotnet build ./SchoolSystems/SchoolSystems.csproj -c Release -o /app/build
 RUN dotnet publish ./SchoolSystems/SchoolSystems.csproj -c Release -o /app/publish
 
 # 🔹 Stage 2: Runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 
 WORKDIR /app
 
