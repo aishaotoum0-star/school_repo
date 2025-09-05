@@ -1,29 +1,33 @@
-# ---------- Build stage ----------
+# 🔹 Stage 1: Build the project
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+
+ENV DOTNET_USE_POLLING_FILE_WATCHER=1
+
 WORKDIR /app
 
-# انسخ ملف الـ solution وملف المشروع (عشان cache بالـ restore)
-COPY *.sln ./
-COPY SchoolSystems/*.csproj ./SchoolSystems/
-
-# Restore dependencies
+# 🔹 Copy project files and restore dependencies
+COPY ./SchoolSystems/SchoolSystems.csproj ./SchoolSystems/
 RUN dotnet restore ./SchoolSystems/SchoolSystems.csproj
 
-# انسخ باقي الكود
-COPY . ./
+# 🔹 Copy the rest of the files
+COPY ./SchoolSystems ./SchoolSystems
 
-# Publish project
-RUN dotnet publish ./SchoolSystems/SchoolSystems.csproj -c Release -o /app/out
+# 🔹 Build the project
+RUN dotnet build ./SchoolSystems/SchoolSystems.csproj -c Release -o /app/build
 
-# ---------- Runtime stage ----------
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
+# 🔹 Publish the project
+RUN dotnet publish ./SchoolSystems/SchoolSystems.csproj -c Release -o /app/publish
+
+# 🔹 Stage 2: Runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
+
 WORKDIR /app
 
-# انسخ الملفات المنشورة من build stage
-COPY --from=build /app/out ./
+# 🔹 Copy published files from build stage
+COPY --from=build /app/publish .
 
-# افتح البورت
+# 🔹 Expose port
 EXPOSE 80
 
-# شغّل المشروع
+# 🔹 Run the application
 ENTRYPOINT ["dotnet", "SchoolSystems.dll"]
