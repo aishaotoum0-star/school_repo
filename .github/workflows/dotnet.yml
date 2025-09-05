@@ -32,7 +32,7 @@ jobs:
         run: dotnet publish ./SchoolSystems/SchoolSystems.csproj -c Release -o ./publish
 
       - name: Upload published artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dotnet-publish
           path: ./publish/*
@@ -45,7 +45,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download published artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: dotnet-publish
           path: ./publish
