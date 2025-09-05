@@ -1,4 +1,4 @@
-name: CI/CD .NET 5 App (Debug Package)
+name: CI/CD .NET 5 App (Debug + Dependencies)
 
 on:
   push:
@@ -14,6 +14,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl1.1 libicu66 zlib1g
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
@@ -25,7 +30,7 @@ jobs:
       - name: Build project with detailed logs
         run: dotnet build ./SchoolSystems/SchoolSystems.csproj --configuration Release --no-restore -v diag
 
-      # مؤقتاً يمكنك تعليق هذه الخطوة لتحديد إذا كانت سبب المشكلة
+      # مؤقتاً يمكن تعليق هذه الخطوة لمعرفة إذا كانت سبب Exit Code 134
       # - name: Apply EF Core Migrations
       #   run: dotnet ef database update --project ./SchoolSystems/SchoolSystems.csproj --connection "${{ secrets.DB_CONNECTION }}"
 
