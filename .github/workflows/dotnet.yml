@@ -1,4 +1,4 @@
-name: Build and Dockerize .NET 5 App
+name: Build, Test and Dockerize .NET 5 App
 
 on:
   push:
@@ -10,44 +10,50 @@ env:
   IMAGE_NAME: schoolsystems
 
 jobs:
-  build:
+  # --- Job 1: Build & Test ---
+  build-and-test:
     runs-on: ubuntu-latest
-
     steps:
-    # --- Checkout code ---
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      # Debug info
+      - name: Show .NET info
+        run: dotnet --info
 
-    # --- Debug Info ---
-    - name: Show .NET info
-      run: dotnet --info
+      - name: List project files
+        run: ls -la
 
-    - name: List project files
-      run: ls -la
+      - name: Show environment variables
+        run: env
 
-    - name: Show environment variables
-      run: env
+      # Setup .NET 5
+      - name: Setup .NET 5
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '5.0.x'
 
-    # --- Setup .NET 5 ---
-    - name: Setup .NET 5
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '5.0.x'
+      # Restore & Build
+      - name: Restore dependencies
+        run: dotnet restore
 
-    # --- Restore & Build ---
-    - name: Restore dependencies
-      run: dotnet restore
+      - name: Build project
+        run: dotnet build --configuration Release --no-restore
 
-    - name: Build project
-      run: dotnet build --configuration Release --no-restore
+      # Run tests verbose (disable parallel to reduce memory usage)
+      - name: Run tests
+        run: dotnet test --no-build --verbosity detailed --parallel none
 
-    # --- Run tests verbose ---
-    - name: Run tests
-      run: dotnet test --no-build --verbosity detailed
+  # --- Job 2: Docker Build ---
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    # --- Docker build only (no push) ---
-    - name: Build Docker image
-      run: docker build -t ${{ env.IMAGE_NAME }}:latest .
+      - name: Build Docker image
+        run: docker build -t ${{ env.IMAGE_NAME }}:latest .
+
 
 
 
