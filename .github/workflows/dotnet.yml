@@ -1,4 +1,4 @@
-name: CI/CD .NET 5 App
+name: CI/CD .NET 6 App
 
 on:
   push:
@@ -14,10 +14,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET 5 SDK
+      - name: Setup .NET 6 SDK
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '5.0.x'
+          dotnet-version: '6.0.x'
 
       - name: Install dependencies
         run: |
@@ -58,7 +58,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-  
       - name: Build Docker image
         run: docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
 
@@ -80,5 +79,3 @@ jobs:
             docker stop schoolsystems || true
             docker rm schoolsystems || true
             docker run -d -p 8080:80 --name schoolsystems ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-
-
