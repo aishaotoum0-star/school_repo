@@ -1,4 +1,4 @@
-name: CI/CD .NET 5 App (Debug + Dependencies)
+name: CI/CD .NET 5 App (Ubuntu 22.04 + Debug)
 
 on:
   push:
@@ -9,15 +9,10 @@ env:
 
 jobs:
   package:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libssl3 libicu70 zlib1g
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -30,7 +25,7 @@ jobs:
       - name: Build project with detailed logs
         run: dotnet build ./SchoolSystems/SchoolSystems.csproj --configuration Release --no-restore -v diag
 
-      # مؤقتاً يمكن تعليق هذه الخطوة لمعرفة إذا كانت سبب Exit Code 134
+      # مؤقتاً يمكن تعليق EF Core Migrations لمعرفة سبب Exit Code 134
       # - name: Apply EF Core Migrations
       #   run: dotnet ef database update --project ./SchoolSystems/SchoolSystems.csproj --connection "${{ secrets.DB_CONNECTION }}"
 
@@ -44,7 +39,7 @@ jobs:
           path: ./publish/*
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: package
     steps:
       - name: Checkout code
@@ -69,7 +64,7 @@ jobs:
         run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: build
     steps:
       - name: Deploy via SSH
