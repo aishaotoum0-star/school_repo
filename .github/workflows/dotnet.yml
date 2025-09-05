@@ -9,15 +9,20 @@ env:
 
 jobs:
   package:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup .NET 5 SDK
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '5.0.x'
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y zlib1g libicu66 libssl1.1
 
     - name: Restore dependencies
       run: dotnet restore ./SchoolSystems/SchoolSystems.csproj
@@ -35,11 +40,11 @@ jobs:
         path: ./publish/*
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: package
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Download published artifacts
       uses: actions/download-artifact@v4
@@ -53,14 +58,14 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build Docker image
+    - name: Build Docker image (with published app)
       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} ./publish
 
     - name: Push Docker image
       run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: build
     steps:
     - name: Deploy via SSH
