@@ -66,6 +66,7 @@ jobs:
 
 
 
+
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
@@ -84,4 +85,5 @@ jobs:
             docker stop schoolsystems || true
             docker rm schoolsystems || true
             docker run -d -p 8080:80 --name schoolsystems ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
 
