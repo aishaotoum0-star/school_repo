@@ -1,19 +1,26 @@
-# Stage 1: Build the project
+# ---------- Build stage ----------
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-
 WORKDIR /app
 
-# Copy project file and restore as distinct layers
+# Copy csproj and restore dependencies first (caching)
 COPY ./SchoolSystems/SchoolSystems.csproj ./SchoolSystems/
 RUN dotnet restore ./SchoolSystems/SchoolSystems.csproj
 
-# Copy everything else and build
+# Copy all source files
 COPY ./SchoolSystems ./SchoolSystems
+
+# Build and publish
 RUN dotnet publish ./SchoolSystems/SchoolSystems.csproj -c Release -o /app/publish
 
-# Stage 2: Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
+# ---------- Runtime stage ----------
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
-COPY --from=build /app/publish .
+
+# Copy published files
+COPY --from=build /app/publish ./
+
+# Expose port
 EXPOSE 80
+
+# Run the application
 ENTRYPOINT ["dotnet", "SchoolSystems.dll"]
