@@ -1,3 +1,4 @@
+
 name: CI/CD .NET 6 App
 
 on:
@@ -62,7 +63,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker buildx build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:9.0 .
+        run: docker buildx build -t ${{ env.IMAGE_NAME }}:9.0 .
 
   deploy:
     runs-on: ubuntu-22.04
@@ -74,12 +75,7 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          port: 22  # عدل إذا SSH على بورت مختلف
           script: |
-            echo "==== Testing SSH connectivity ===="
-            ping -c 3 8.8.8.8 || true
-            docker --version
-            echo "==== Deploying Docker container ===="
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:9.0
             docker stop schoolsystems || true
             docker rm schoolsystems || true
